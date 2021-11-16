@@ -10,65 +10,62 @@ if (!defined('BASEPATH'))
  **/
 class Auth_model extends CI_Model
 {
-    public $hash_key = 'HHZASm9pZ7h!pDpDB3_X$a_4Ash+dNbVnuYy5S%-HUPdNUA2x?';
-    public $status_active = '1';
-    public $status_pending = '0';
-
+    public $config;
+    public $random = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890~!@#%^&*()";
     public function __construct()
     {
         parent::__construct();
 
     }
 
-    function login($login)
+    function admin_login($login)
     {
-        $pass_h = $this->generate_hash($login['password']);
+        return $this->aauth->admin_login($login);
+    }
+    function student_login($login)
+    {
+        return $this->aauth->student_login($login);
+    }
+    function admin_register($data)
+    {
+        $pass = substr(str_shuffle($this->random),0,8);
+        $data['password'] = $pass;
 
-        // select the user
-        $this->db->select('employees.*,roles.name as rname,roles.permissions,roles.is_system as role_is_system,branches.name as bname,departments.name as dname')->from('employees');
-        $this->db->join('branches','branches.id=employees.branch','left');
-        $this->db->join('departments','departments.id=employees.department','left');
-        $this->db->join('roles','roles.id=employees.role','left');
-        $this->db->where('email', $login['email']);
-        // $this->db->where('status',$this->status_active);
-        $query = $this->db->get();
-        $res = $query->result_array();
+        $data['phone'] = $this->aauth->format_phone($data['phone']);
+        
+        $this->config =& get_config();
+        $userkey = $this->config['smskey'];
+        $password = $this->config['smspass'];
 
-        // echo json_encode($login['email']);die;
+        $inserted = $this->aauth->admin_signup($data);
+        if($inserted > 0){
+            $msg = "Hello ". $data['fname'] ." ". $data['lname'] .",
+Welcome to F-masomo portal. To login, proceed to ".base_url()." . Your email is ". $data['email'] ." and password is ". $data['password'] .". You are advised to change the password upon logging in.";
 
-        if (sizeof($res) > 0) {
-            $result = $res[0];
-            // select the saved password hash key
-            $db_hash = $result['password'];
-            $auth = $db_hash == $pass_h ? true : false;
+        $smsresponse = $this->fortsortgateway->send($msg,$data['phone'],$userkey,$password);
+        } 
 
-            // check if authentication was successful
-            if ($auth) {
-                // successful, log then continue
-
-                return json_encode(['status' => '1', "message" => 'login successful', 'userdata' => $result]);
-            } else {
-                return json_encode(['status' => "0", 'message' => 'Authentication failed!']);
-            }
-
-        } else {
-            return json_encode(['status' => "0", 'message' => 'User does not exist!']);
-        }
-
+        return $inserted;  
     }
 
-    function generate_hash($password)
+    function student_register($data)
     {
-        return md5($this->hash_key . $password);
-    }
+        $pass = substr(str_shuffle($this->random),0,8);
+        $data['password'] = $data['adm'];
+        
+        $this->config =& get_config();
+        $userkey = $this->config['smskey'];
+        $password = $this->config['smspass'];
 
-    function updatepass($pass)
-    {
-        $data = ['password' => $this->generate_hash($pass)];
-        $this->db->where('id', $this->session->userdata('user_aob')->id);
-        $this->db->update('employees', $data);
-        return $this->db->affected_rows();
-    }
+        $inserted = $this->aauth->student_signup($data);
+        if($inserted > 0){
+            $msg = "Hello ". $data['fname'] ." ". $data['lname'] .",
+Welcome to F-masomo portal. To login, proceed to ".base_url()."auth/student . Your username is ". $data['adm'] ." and password is ". $data['password'] .". You are advised to change the password upon logging in.";
 
+        $smsresponse = $this->fortsortgateway->send($msg,$data['phone'],$userkey,$password);
+        } 
+
+        return $inserted;  
+    }
 
 }

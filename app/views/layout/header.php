@@ -47,6 +47,13 @@
             font-weight: bold;
             color: red;
         }
+        label{
+            font-weight: bold;
+        }
+        .required{
+            color: red;
+            margin-left: 10px;
+        }
     </style>
 
 </head>
