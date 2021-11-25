@@ -46,6 +46,7 @@
                         <a class="collapse-item" href="<?php echo base_url();?>inventory/purchases" id="purchases">Purhases</a>
                         <a class="collapse-item" href="<?php echo base_url();?>inventory/stockreturns" id="stockreturns">Stock Return</a>
                         <a class="collapse-item" href="<?php echo base_url();?>inventory/suppliers" id="suppliers">Suppliers</a>
+                        <a class="collapse-item" href="<?php echo base_url();?>inventory/supplierpmts" id="supplierpmts">Supplier Payments</a>
                     </div>
                 </div>
             </li>
@@ -75,6 +76,7 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="<?php echo base_url();?>crm/clients" id="clients">Clients</a>
                         <a class="collapse-item" href="<?php echo base_url();?>crm/topclients" id="topclients">Top Clients</a>
+                        <a class="collapse-item" href="<?php echo base_url();?>crm/clientpmts" id="clientpmts">Client Payments</a>
                     </div>
                 </div>
             </li>
@@ -97,8 +99,6 @@
                 <div id="hrm" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="<?php echo base_url();?>hrm/employees" id="employees">Employees</a>
-                        <a class="collapse-item" href="<?php echo base_url();?>hrm/departments" id="departments">Departments</a>
-                        <a class="collapse-item" href="<?php echo base_url();?>hrm/payroll" id="payroll">Payroll</a>
                         <a class="collapse-item" href="<?php echo base_url();?>hrm/roles" id="roles">Roles</a>
                     </div>
                 </div>

@@ -15,7 +15,7 @@
         <?php } ?>
         <?php $this->load->view('includes/flashmessages'); ?>
         <div class="row">
-            <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#add-new"><i
+            <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#add"><i
                     class="fas fa-plus fa-sm text-white-50"></i> Add New</a>
         </div>
     </div>
@@ -35,7 +35,6 @@
                             <th>#</th>
                             <th>Product Name</th>
                             <th>Quantity</th>
-                            <th>Supplier</th>
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -44,37 +43,21 @@
                             <th>#</th>
                             <th>Product Name</th>
                             <th>Quantity</th>
-                            <th>Supplier</th>
                             <th>Action</th>
                         </tr>
                         </tfoot>
                         <tbody>
-                        <?php if(!empty($students)){
-                            foreach($students as $one) {
-                                if($one['status'] == 1){
-                                    $class = "success";
-                                    $status = "active";
-                                }else{
-                                    $class = "danger";
-                                    $status = "expired";
-                                }
+                        <?php if(!empty($returns)){
+                            $i = 0;
+                            foreach($returns as $one) {
+                                $i++;
                                 ?>
                                 <tr>
-                                    <td><?php echo $one['fname']." ".$one['lname'];?></td>
-                                    <td><?php echo $one['adm'];?></td>
-                                    <td><?php echo $one['cname'];?></td>
-                                    <td><?php if($one['last_seen']) echo date('d/m/Y H:i',strtotime($one['last_seen']));?></td>
-                                    <td><span class="badge badge-<?php echo $class;?>"><?php echo $status;?></span></td>
+                                    <td><?= $i;?></td>
+                                    <td><?php echo $one['name'];?></td>
+                                    <td><?php echo $one['amount'];?></td>
                                     <td>
-                                        <button class="btn btn-info view-student" data-id = "<?php echo $one['id'];?>"><i class="fa fa-eye"></i></button>
-                                        <button class="btn btn-primary edit-student" data-id = "<?php echo $one['id'];?>"><i class="fa fa-edit"></i></button>
-                                        <button class="btn btn-danger delete-subject" data-id = "<?php echo $one['id'];?>"><i class="fa fa-trash"></i></button>
-                                        <?php if($one['status'] == 1){?>
-                                            <button class="btn btn-warning ban-student" data-id = "<?php echo $one['id'];?>"><i class="fas fa-ban"></i></button>
-                                        <?php }else{ ?>
-                                            <button class="btn btn-success allow-student" data-id = "<?php echo $one['id'];?>"><i class="fas fa-chevron-circle-right"></i></button>
-                                        <?php  }?>
-
+                                        <button class="btn btn-danger delete" data-id = "<?php echo $one['id'];?>"><i class="fa fa-trash"></i></button>
                                     </td>
                                 </tr>
 
@@ -92,3 +75,59 @@
 
 </div>
 <!-- End of Main Content -->
+<div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Stock</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="<?php echo base_url();?>inventory/addreturn" method="post">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label>Product<small class="required">*</small></label>
+                            <select class="form-control select2" name="product">
+                                <option value="">--Choose product</option>
+                                <?php foreach($products as $one){?>
+                                    <option value="<?= $one['id'];?>"><?= $one['name'];?></option>
+                                <?php }?>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Stock Qty<small class="required">*</small></label>
+                            <input type="text" name="qty" class="form-control" placeholder="Qty..">
+                        </div>
+
+                    </div>
+
+                    <input type="submit" class="btn btn-outline-success">
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" type="button" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('.delete').click(function(){
+        var del = confirm("Are you sure you want to delete this Return? NB: All the associated data will be deleted too!");
+        if (del == true) {
+            var id = $(this).attr("data-id");
+            var url = "<?php echo base_url();?>" + "inventory/deletereturn/" + id;
+            $.ajax({
+                type: "GET",
+                url: url,
+                dataType: "json",
+                success: function(response){
+                    window.location.reload();
+                }
+            });
+        }
+    });
+</script>

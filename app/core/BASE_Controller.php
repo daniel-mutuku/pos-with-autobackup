@@ -12,7 +12,7 @@
  * It is therefore extended by the other app controllers that want to benefit from that.
  ** */
 class BASE_Controller extends CI_Controller
-{    
+{
     public function __construct()
     {
         parent::__construct();
@@ -23,6 +23,7 @@ class BASE_Controller extends CI_Controller
         
         
     }
+
     
    
 }

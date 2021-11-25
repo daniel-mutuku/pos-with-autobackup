@@ -51,32 +51,24 @@
                         </tr>
                         </tfoot>
                         <tbody>
-                        <?php if(!empty($students)){
-                            foreach($students as $one) {
-                                if($one['status'] == 1){
-                                    $class = "success";
-                                    $status = "active";
-                                }else{
-                                    $class = "danger";
-                                    $status = "expired";
-                                }
+                        <?php if(!empty($clients)){
+                            $i = 0;
+                            foreach($clients as $one) {
+                                $i++;
+                                $totshopped = $this->crm_model->totalshopped($one['id']);
+                                $totpaid = $this->crm_model->totalpaid($one['id']);
+                                $due = $totshopped-$totpaid;
                                 ?>
                                 <tr>
-                                    <td><?php echo $one['fname']." ".$one['lname'];?></td>
-                                    <td><?php echo $one['adm'];?></td>
-                                    <td><?php echo $one['cname'];?></td>
-                                    <td><?php if($one['last_seen']) echo date('d/m/Y H:i',strtotime($one['last_seen']));?></td>
-                                    <td><span class="badge badge-<?php echo $class;?>"><?php echo $status;?></span></td>
+                                    <td><?= $i; ?></td>
+                                    <td><?php echo $one['name'];?></td>
+                                    <td><?php echo $one['phone'];?></td>
+                                    <td>Ksh. <?php echo number_format($totshopped,"2",".",",");?></td>
+                                    <td style="font-weight: bold;<?php if($due > 0) {echo 'color: red;';}else{ echo 'color: green';}?>">Ksh. <?php echo number_format(abs($due),"2",".",",");?></td>
                                     <td>
-                                        <button class="btn btn-info view-student" data-id = "<?php echo $one['id'];?>"><i class="fa fa-eye"></i></button>
-                                        <button class="btn btn-primary edit-student" data-id = "<?php echo $one['id'];?>"><i class="fa fa-edit"></i></button>
-                                        <button class="btn btn-danger delete-subject" data-id = "<?php echo $one['id'];?>"><i class="fa fa-trash"></i></button>
-                                        <?php if($one['status'] == 1){?>
-                                            <button class="btn btn-warning ban-student" data-id = "<?php echo $one['id'];?>"><i class="fas fa-ban"></i></button>
-                                        <?php }else{ ?>
-                                            <button class="btn btn-success allow-student" data-id = "<?php echo $one['id'];?>"><i class="fas fa-chevron-circle-right"></i></button>
-                                        <?php  }?>
-
+                                        <button class="btn btn-success pay" data-id = "<?php echo $one['id'];?>"><i class="fab fa-amazon-pay"></i></button>
+                                        <button class="btn btn-primary edit" data-id = "<?php echo $one['id'];?>"><i class="fa fa-edit"></i></button>
+                                        <button class="btn btn-danger delete" data-id = "<?php echo $one['id'];?>"><i class="fa fa-trash"></i></button>
                                     </td>
                                 </tr>
 
@@ -94,4 +86,220 @@
 
 </div>
 <!-- End of Main Content -->
+<div class="modal fade" id="add-new" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add New</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="<?php echo base_url();?>crm/clients" method="post">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label>Name<small class="required">*</small></label>
+                            <input type="text" name="name" class="form-control" placeholder="Name..">
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Phone no<small class="required">*</small></label>
+                            <input type="tel" name="phone" class="form-control" placeholder="Phone no..">
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Warehouse<small class="required">*</small></label>
+                            <select class="form-control select2" name="branch_id">
+                                <option value="">--Choose warehouse</option>
+                                <?php foreach($warehouses as $one){?>
+                                    <option value="<?= $one['id'];?>"><?= $one['name'];?></option>
+                                <?php }?>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <input type="submit" class="btn btn-outline-success">
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" type="button" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="pay" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Pay Supplier</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="<?php echo base_url();?>crm/payclients" method="post">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label>Amount.<small class="required">*</small></label>
+                            <input type="hidden" id="client_id" name="client_id">
+                            <input type="number" min="0" name="amount" class="form-control" placeholder="Amount..">
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label>Mode<small class="required">*</small></label>
+                            <select class="form-control select2" name="mode">
+                                <option value="">--Choose warehouse</option>
+                                <option value="cash">Cash</option>
+                                <option value="cheque">Cheque</option>
+                                <option value="mpesa">M-Pesa</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <input type="submit" class="btn btn-outline-success">
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" type="button" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="add-new" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add New</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="<?php echo base_url();?>crm/clients" method="post">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label>Name<small class="required">*</small></label>
+                            <input type="text" name="name" class="form-control" placeholder="Name..">
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Phone no<small class="required">*</small></label>
+                            <input type="tel" name="phone" class="form-control" placeholder="Phone no..">
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Warehouse<small class="required">*</small></label>
+                            <select class="form-control select2" name="branch_id">
+                                <option value="">--Choose warehouse</option>
+                                <?php foreach($warehouses as $one){?>
+                                    <option value="<?= $one['id'];?>"><?= $one['name'];?></option>
+                                <?php }?>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <input type="submit" class="btn btn-outline-success">
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" type="button" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modify</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="" id="editform" method="post">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label>Name<small class="required">*</small></label>
+                            <input type="text" id="name" name="name" class="form-control" placeholder="Name..">
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Phone no<small class="required">*</small></label>
+                            <input type="tel" id="phone" name="phone" class="form-control" placeholder="Phone no..">
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>Warehouse<small class="required">*</small></label>
+                            <select class="form-control select2" id="branch_id" name="branch_id">
+                                <option value="">--Choose warehouse</option>
+                                <?php foreach($warehouses as $one){?>
+                                    <option value="<?= $one['id'];?>"><?= $one['name'];?></option>
+                                <?php }?>
+                            </select>
+                        </div>
+
+                    </div>
+                    <input type="submit" class="btn btn-outline-success">
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" type="button" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('.edit').click(function(){
+        $('#editform').hide();
+        $('#edit').modal('show');
+        $('#viewloading').show();
+
+        var id = $(this).attr("data-id");
+        var url = "<?php echo base_url();?>" + "crm/viewclient/" + id;
+        var editurl =  "<?php echo base_url();?>" + "crm/editclient/" + id;
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "json",
+            success: function(response){
+                var teacher = response;
+                $('#name').val(teacher['name']);
+                $('#phone').val(teacher['phone']);
+                $('#branch_id').val(teacher['branch_id']).change();
+
+                $('#editform').show();
+                $('#viewloading').hide();
+                $('#editform').attr("action",editurl);
+            }
+
+        });
+    });
+    $('.pay').click(function(){
+        var id = $(this).attr("data-id");
+        $('#client_id').val(id);
+        $('#pay').modal('show');
+    });
+    $('.delete').click(function(){
+        var del = confirm("Are you sure you want to delete this Client? NB: All the associated data will be deleted too!");
+        if (del == true) {
+            var id = $(this).attr("data-id");
+            var url = "<?php echo base_url();?>" + "crm/deleteclient/" + id;
+            $.ajax({
+                type: "GET",
+                url: url,
+                dataType: "json",
+                success: function(response){
+                    window.location.reload();
+                }
+            });
+        }
+    });
+</script>
 

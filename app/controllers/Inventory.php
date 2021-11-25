@@ -76,7 +76,7 @@ class Inventory extends BASE_Controller {
     }
     public function addstock()
     {
-        $this->form_validation->set_rules('qty', 'Name', 'required');
+        $this->form_validation->set_rules('qty', 'Qty', 'required');
         $this->form_validation->set_rules('product_id', 'Product', 'required');
         $this->form_validation->set_rules('price', 'Total price', 'required');
 
@@ -262,6 +262,7 @@ class Inventory extends BASE_Controller {
     }
     public function purchases()
     {
+        $this->data['purchases'] = $this->inventory_model->purchases();
         $this->data['dtable'] = "present";
         $this->data['menu'] = "inventory";
         $this->data['menuitem'] = "purchases";
@@ -269,14 +270,69 @@ class Inventory extends BASE_Controller {
         $this->data['page_content'] = 'inventory/purchases';
         $this->load->view('layout/template', $this->data);
     }
+    public function supplierpmts()
+    {
+        $this->data['pmts'] = $this->inventory_model->supplierpmts();
+        $this->data['dtable'] = "present";
+        $this->data['menu'] = "inventory";
+        $this->data['menuitem'] = "supplierpmts";
+        $this->data['pg_title'] = "Payments";
+        $this->data['page_content'] = 'inventory/supplierpmts';
+        $this->load->view('layout/template', $this->data);
+    }
+    public function deletepurchase($id){
+        $data = array();
+        $this->inventory_model->deletepurchase($id);
+        echo json_encode($data);
+    }
+    public function deletesupppmt($id){
+        $data = array();
+        $this->inventory_model->deletesupppmt($id);
+        echo json_encode($data);
+    }
     public function stockreturns()
     {
+        $this->data['products'] = $this->inventory_model->fetchproducts();
+        $this->data['returns'] = $this->inventory_model->stockreturns();
         $this->data['dtable'] = "present";
         $this->data['menu'] = "inventory";
         $this->data['menuitem'] = "stockreturns";
         $this->data['pg_title'] = "Stock Returns";
         $this->data['page_content'] = 'inventory/stockreturns';
         $this->load->view('layout/template', $this->data);
+    }
+    public function addreturn()
+    {
+        $this->form_validation->set_rules('qty', 'Qty', 'required');
+        $this->form_validation->set_rules('product', 'Product', 'required');
+
+        if ($this->form_validation->run() == FALSE)
+        {
+            $this->data['products'] = $this->inventory_model->fetchproducts();
+            $this->data['returns'] = $this->inventory_model->stockreturns();
+            $this->data['dtable'] = "present";
+            $this->data['menu'] = "inventory";
+            $this->data['menuitem'] = "stockreturns";
+            $this->data['pg_title'] = "Stock Returns";
+            $this->data['page_content'] = 'inventory/stockreturns';
+            $this->load->view('layout/template', $this->data);
+        }else{
+            $data = $this->input->post();
+            $inserted = $this->inventory_model->addreturn($data);
+            if ($inserted > 0) {
+                $this->session->set_flashdata('success-msg','Success!');
+            }else{
+                $this->session->set_flashdata('error-msg','Failed, try again!');
+            }
+            redirect('inventory/stockreturns');
+        }
+
+    }
+
+    public function deletereturn($id){
+        $data = array();
+        $this->inventory_model->deletereturn($id);
+        echo json_encode($data);
     }
     public function paysuppliers()
     {

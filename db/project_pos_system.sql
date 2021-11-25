@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 11, 2021 at 06:07 PM
+-- Generation Time: Nov 25, 2021 at 09:04 PM
 -- Server version: 10.1.37-MariaDB
 -- PHP Version: 7.2.14
 
@@ -32,12 +32,18 @@ CREATE TABLE `branches` (
   `name` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
   `location` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
   `store_no` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
-  `manager_id` int(11) NOT NULL,
   `branch_phone` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
   `branch_email` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `branches`
+--
+
+INSERT INTO `branches` (`id`, `name`, `location`, `store_no`, `branch_phone`, `branch_email`, `created_at`, `updated_at`) VALUES
+(2, 'Newdawn Town', 'Nairobi, Kenya', 'DSD23CHD', '+254717576900', 'town@gmail.com', '2021-11-14 17:14:52', '2021-11-14 17:14:52');
 
 -- --------------------------------------------------------
 
@@ -51,6 +57,13 @@ CREATE TABLE `clients` (
   `phone` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
   `branch_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `clients`
+--
+
+INSERT INTO `clients` (`id`, `name`, `phone`, `branch_id`) VALUES
+(214491532, 'Daniel Mutinda', '0717576900', 2);
 
 -- --------------------------------------------------------
 
@@ -96,7 +109,7 @@ CREATE TABLE `invoices` (
 
 CREATE TABLE `invoice_payments` (
   `id` int(11) NOT NULL,
-  `invoice_id` int(11) NOT NULL,
+  `client_id` int(11) NOT NULL,
   `mode` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
   `amount` decimal(10,2) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -116,6 +129,13 @@ CREATE TABLE `login` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `login`
+--
+
+INSERT INTO `login` (`id`, `staff_id`, `password`, `created_at`, `updated_at`) VALUES
+(3, 298413204, '9e061dc6c341bfb89f01f5bcd11dc99f', '2021-11-25 19:50:41', '2021-11-25 20:04:14');
 
 -- --------------------------------------------------------
 
@@ -149,6 +169,13 @@ CREATE TABLE `products` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`id`, `name`, `sku`, `barcode`, `buying_price`, `selling_price`, `branch_id`, `cat_id`, `created_at`, `updated_at`) VALUES
+(1, 'Samsung M20', '243WD2345324E', '3324543231343', '15000.00', '22000.00', 2, 1, '2021-11-16 05:27:11', '2021-11-16 05:27:11');
+
 -- --------------------------------------------------------
 
 --
@@ -158,11 +185,22 @@ CREATE TABLE `products` (
 CREATE TABLE `product_adjustments` (
   `id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
-  `particulars` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `type` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `amount` int(11) NOT NULL,
+  `effect` varchar(10) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'add' COMMENT 'add or reduce',
+  `type` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `product_adjustments`
+--
+
+INSERT INTO `product_adjustments` (`id`, `product_id`, `amount`, `effect`, `type`, `created_at`, `updated_at`) VALUES
+(1, 1, 10, 'add', 'stock_purchase', '2021-11-16 11:04:00', '2021-11-21 15:19:27'),
+(2, 1, 10, 'add', 'stock_purchase', '2021-11-16 11:05:28', '2021-11-21 15:19:31'),
+(278, 1, 10, 'reduce', 'stock_return', '2021-11-21 17:47:58', '2021-11-21 17:47:58'),
+(270700169, 1, 10, 'reduce', 'stock_return', '2021-11-21 17:51:10', '2021-11-21 17:51:10');
 
 -- --------------------------------------------------------
 
@@ -177,6 +215,14 @@ CREATE TABLE `product_categories` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `product_categories`
+--
+
+INSERT INTO `product_categories` (`id`, `name`, `branch_id`, `created_at`) VALUES
+(1, 'Mobile phones', 2, '2021-11-14 17:31:44'),
+(2, 'Laptop', 2, '2021-11-16 05:09:20');
+
 -- --------------------------------------------------------
 
 --
@@ -189,6 +235,13 @@ CREATE TABLE `roles` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `roles`
+--
+
+INSERT INTO `roles` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(246801598, 'Admin', '2021-11-25 18:24:40', '2021-11-25 18:24:40');
 
 -- --------------------------------------------------------
 
@@ -225,6 +278,13 @@ CREATE TABLE `staff` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `staff`
+--
+
+INSERT INTO `staff` (`id`, `fname`, `lname`, `email`, `username`, `phone_no`, `dob`, `id_no`, `role_id`, `branch_id`, `created_at`, `updated_at`) VALUES
+(298413204, 'Dedan', 'Wanjiru', 'mike@gmail.com', 'admin', '0717576900', 0, 36474358, 246801598, 2, '2021-11-25 19:50:41', '2021-11-25 19:50:41');
+
 -- --------------------------------------------------------
 
 --
@@ -259,6 +319,50 @@ CREATE TABLE `suppliers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
+-- Dumping data for table `suppliers`
+--
+
+INSERT INTO `suppliers` (`id`, `name`, `email`, `phone_no`, `id_no`, `location`, `branch_id`, `created_at`, `updated_at`) VALUES
+(1, 'Daniel', 'daniel@gmail.com', '07========6', 36474358, 'nairobi', 2, '2021-11-16 10:09:57', '2021-11-16 10:37:19'),
+(2, 'Dedan Kamau', 'dedan@gmail.com', '+254717576900', 36474358, 'Nairobi, Kenya', 2, '2021-11-16 10:36:06', '2021-11-16 10:36:06');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `supplier_payments`
+--
+
+CREATE TABLE `supplier_payments` (
+  `id` int(11) NOT NULL,
+  `supplier_id` int(11) NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `method` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `supplier_supplies`
+--
+
+CREATE TABLE `supplier_supplies` (
+  `id` int(11) NOT NULL,
+  `adjustment_id` int(11) NOT NULL,
+  `supplier_id` int(11) NOT NULL,
+  `total_price` decimal(10,2) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `supplier_supplies`
+--
+
+INSERT INTO `supplier_supplies` (`id`, `adjustment_id`, `supplier_id`, `total_price`, `created_at`) VALUES
+(4, 1, 2, '150000.00', '2021-11-16 11:04:00'),
+(6, 2, 2, '150000.00', '2021-11-16 11:05:28');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -266,8 +370,7 @@ CREATE TABLE `suppliers` (
 -- Indexes for table `branches`
 --
 ALTER TABLE `branches`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `BranchManager` (`manager_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `clients`
@@ -298,7 +401,7 @@ ALTER TABLE `invoices`
 --
 ALTER TABLE `invoice_payments`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `IPInvcoiceInvoiceID` (`invoice_id`);
+  ADD KEY `IPInvcoiceInvoiceID` (`client_id`);
 
 --
 -- Indexes for table `login`
@@ -375,6 +478,21 @@ ALTER TABLE `suppliers`
   ADD KEY `SuppBrnachBranchID` (`branch_id`);
 
 --
+-- Indexes for table `supplier_payments`
+--
+ALTER TABLE `supplier_payments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `SupPaymentsSuppliers` (`supplier_id`);
+
+--
+-- Indexes for table `supplier_supplies`
+--
+ALTER TABLE `supplier_supplies`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `SuppliesAdjustments` (`adjustment_id`),
+  ADD KEY `SuppliesSupplier` (`supplier_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -382,13 +500,13 @@ ALTER TABLE `suppliers`
 -- AUTO_INCREMENT for table `branches`
 --
 ALTER TABLE `branches`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=223533746;
 
 --
 -- AUTO_INCREMENT for table `clients`
 --
 ALTER TABLE `clients`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=240282195;
 
 --
 -- AUTO_INCREMENT for table `expenses`
@@ -406,13 +524,13 @@ ALTER TABLE `invoices`
 -- AUTO_INCREMENT for table `invoice_payments`
 --
 ALTER TABLE `invoice_payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=231093729;
 
 --
 -- AUTO_INCREMENT for table `login`
 --
 ALTER TABLE `login`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -424,25 +542,25 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `product_adjustments`
 --
 ALTER TABLE `product_adjustments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=270700170;
 
 --
 -- AUTO_INCREMENT for table `product_categories`
 --
 ALTER TABLE `product_categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=282941535;
 
 --
 -- AUTO_INCREMENT for table `settings`
@@ -454,7 +572,7 @@ ALTER TABLE `settings`
 -- AUTO_INCREMENT for table `staff`
 --
 ALTER TABLE `staff`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=298413205;
 
 --
 -- AUTO_INCREMENT for table `stock_purchases`
@@ -466,17 +584,23 @@ ALTER TABLE `stock_purchases`
 -- AUTO_INCREMENT for table `suppliers`
 --
 ALTER TABLE `suppliers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `supplier_payments`
+--
+ALTER TABLE `supplier_payments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `supplier_supplies`
+--
+ALTER TABLE `supplier_supplies`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `branches`
---
-ALTER TABLE `branches`
-  ADD CONSTRAINT `BranchManager` FOREIGN KEY (`manager_id`) REFERENCES `staff` (`id`);
 
 --
 -- Constraints for table `clients`
@@ -503,7 +627,7 @@ ALTER TABLE `invoices`
 -- Constraints for table `invoice_payments`
 --
 ALTER TABLE `invoice_payments`
-  ADD CONSTRAINT `IPInvcoiceInvoiceID` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `IPInvcoiceInvoiceID` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `login`
@@ -555,6 +679,19 @@ ALTER TABLE `stock_purchases`
 --
 ALTER TABLE `suppliers`
   ADD CONSTRAINT `SuppBrnachBranchID` FOREIGN KEY (`branch_id`) REFERENCES `branches` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `supplier_payments`
+--
+ALTER TABLE `supplier_payments`
+  ADD CONSTRAINT `SupPaymentsSuppliers` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `supplier_supplies`
+--
+ALTER TABLE `supplier_supplies`
+  ADD CONSTRAINT `SuppliesAdjustments` FOREIGN KEY (`adjustment_id`) REFERENCES `product_adjustments` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `SuppliesSupplier` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
