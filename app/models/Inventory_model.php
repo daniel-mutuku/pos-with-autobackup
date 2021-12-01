@@ -237,7 +237,9 @@ class Inventory_model extends CI_Model
     }
     public function addstock($data)
     {
-//
+        $sql1 = "";
+        $sql2 = "";
+
         $prodAds = array("product_id" => $data['product_id'], "amount" => $data['qty'], "effect" => "add", "type" => "stock_purchase");
         $supply = array("supplier_id" => $data['supplier_id'],"total_price" => $data['price']);
 
@@ -247,13 +249,15 @@ class Inventory_model extends CI_Model
         $prodAds['id'] = $this->transcode();
         $this->db->insert($this->_tableProductAdjustments, $prodAds); # Inserting data
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            $sql1 = PHP_EOL . $this->db->last_query() . PHP_EOL;
+
         $supply['adjustment_id'] = $this->db->insert_id();
 
         $supply['id'] = $this->transcode();
         $this->db->insert($this->_tableSuppSupplies,$supply);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            $sql2 = PHP_EOL . $this->db->last_query() . PHP_EOL;
+
         if ($this->db->trans_status() == FALSE) {
             # Something went wrong.
             $this->db->trans_rollback();
@@ -261,8 +265,8 @@ class Inventory_model extends CI_Model
         }
         else {
             $this->db->trans_complete();
-            # Everything is Perfect.
-            # Committing data to the database.
+            file_put_contents($this->_exportFile, $sql1, FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, $sql2, FILE_APPEND | LOCK_EX);
             $this->db->trans_commit();
             return 1;
         }
@@ -271,18 +275,20 @@ class Inventory_model extends CI_Model
     }
     public function deletepurchase($id)
     {
+        $sql1 = "";
+        $sql2 = "";
         $this->db->trans_start(); # Starting Transaction
         $this->db->trans_strict(FALSE); # See Note 01. If you wish can remove as well
 
         $this->db->where('adjustment_id',$id);
         $this->db->delete($this->_tableSuppSupplies);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            $sql1 = PHP_EOL . $this->db->last_query() . PHP_EOL;
 
         $this->db->where('id',$id);
         $this->db->delete($this->_tableProductAdjustments);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            $sql2 = PHP_EOL . $this->db->last_query() . PHP_EOL;
 
         if ($this->db->trans_status() == FALSE) {
             # Something went wrong.
@@ -291,8 +297,9 @@ class Inventory_model extends CI_Model
         }
         else {
             $this->db->trans_complete();
-            # Everything is Perfect.
-            # Committing data to the database.
+            file_put_contents($this->_exportFile, $sql1, FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, $sql2, FILE_APPEND | LOCK_EX);
+
             $this->db->trans_commit();
             return 1;
         }
@@ -315,7 +322,7 @@ class Inventory_model extends CI_Model
         $this->db->join($this->_tableProductAdjustments,$this->_tableProductAdjustments.".id=".$this->_tableSuppSupplies.".adjustment_id");
         $this->db->join($this->_tableProducts,$this->_tableProducts.".id=".$this->_tableProductAdjustments.".product_id");
         $this->db->join($this->_tableSuppliers,$this->_tableSuppliers.".id=".$this->_tableSuppSupplies.".supplier_id");
-        $this->db->order_by($this->_tableSuppSupplies.".id","DESC");
+        $this->db->order_by($this->_tableSuppSupplies.".created_at","DESC");
         $query = $this->db->get();
 
         return $query->result_array();
@@ -325,7 +332,7 @@ class Inventory_model extends CI_Model
         $this->db->where($this->_tableSuppliers.".branch_id",$this->branchid());
         $this->db->select($this->_tableSuppPayments.".*,".$this->_tableSuppliers.".name")->from($this->_tableSuppPayments);
         $this->db->join($this->_tableSuppliers,$this->_tableSuppliers.".id=".$this->_tableSuppPayments.".supplier_id");
-        $this->db->order_by($this->_tableSuppPayments.".id","DESC");
+        $this->db->order_by($this->_tableSuppPayments.".created_at","DESC");
         $query = $this->db->get();
 
         return $query->result_array();
@@ -336,7 +343,7 @@ class Inventory_model extends CI_Model
         $this->db->where($this->_tableProducts.".branch_id",$this->branchid());
         $this->db->select($this->_tableProducts.".name,".$this->_tableProductAdjustments.".*")->from($this->_tableProductAdjustments);
         $this->db->join($this->_tableProducts,$this->_tableProducts.".id=".$this->_tableProductAdjustments.".product_id");
-        $this->db->order_by($this->_tableProductAdjustments.".id","DESC");
+        $this->db->order_by($this->_tableProductAdjustments.".created_at","DESC");
         $query = $this->db->get();
 
         return $query->result_array();

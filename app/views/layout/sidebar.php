@@ -60,7 +60,6 @@
                 <div id="sales" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="<?php echo base_url();?>sales/possales" id="possales">POS Sales</a>
-                        <a class="collapse-item" href="<?php echo base_url();?>sales/returns" id="returns">Returns</a>
                         <a class="collapse-item" href="<?php echo base_url();?>sales/creditsales" id="creditsales">Credit Sales</a>
                         <a class="collapse-item" href="<?php echo base_url();?>sales/cashsales" id="cashsales">Cash Sales</a>
                     </div>
@@ -75,7 +74,6 @@
                 <div id="crm" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="<?php echo base_url();?>crm/clients" id="clients">Clients</a>
-                        <a class="collapse-item" href="<?php echo base_url();?>crm/topclients" id="topclients">Top Clients</a>
                         <a class="collapse-item" href="<?php echo base_url();?>crm/clientpmts" id="clientpmts">Client Payments</a>
                     </div>
                 </div>
@@ -103,23 +101,6 @@
                     </div>
                 </div>
             </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#reports"
-                   aria-expanded="true" aria-controls="reports">
-                    <i class="fas fa-shopping-bag"></i>
-                    <span>Data & Reports</span>
-                </a>
-                <div id="reports" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="<?php echo base_url();?>reports/categories" id="categories">Product Categories</a>
-                        <a class="collapse-item" href="<?php echo base_url();?>reports/topproducts" id="topproducts">Top Products</a>
-                        <a class="collapse-item" href="<?php echo base_url();?>reports/profit" id="profit">Profit</a>
-                        <a class="collapse-item" href="<?php echo base_url();?>reports/topcustomers" id="topcustomers">Top Customers</a>
-                        <a class="collapse-item" href="<?php echo base_url();?>reports/incomeexpense" id="incomeexpense">Income vs Expenses</a>
-                    </div>
-                </div>
-            </li>
-
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 

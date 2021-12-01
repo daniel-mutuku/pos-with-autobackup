@@ -14,10 +14,7 @@
             </div>
         <?php } ?>
         <?php $this->load->view('includes/flashmessages'); ?>
-        <div class="row">
-            <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#add-new"><i
-                    class="fas fa-plus fa-sm text-white-50"></i> Add New</a>
-        </div>
+
     </div>
 
     <!-- Content Row -->
@@ -35,9 +32,7 @@
                             <th>#</th>
                             <th>Name</th>
                             <th>Phone</th>
-                            <th>Total Shopped</th>
-                            <th>Due</th>
-                            <th>Action</th>
+                            <th>Total</th>
                         </tr>
                         </thead>
                         <tfoot>
@@ -45,39 +40,20 @@
                             <th>#</th>
                             <th>Name</th>
                             <th>Phone</th>
-                            <th>Total Shopped</th>
-                            <th>Due</th>
-                            <th>Action</th>
+                            <th>Total</th>
                         </tr>
                         </tfoot>
                         <tbody>
-                        <?php if(!empty($students)){
-                            foreach($students as $one) {
-                                if($one['status'] == 1){
-                                    $class = "success";
-                                    $status = "active";
-                                }else{
-                                    $class = "danger";
-                                    $status = "expired";
-                                }
+                        <?php if(!empty($clients)){
+                            $i = 0;
+                            foreach($clients as $one) {
+                                $i++;
                                 ?>
                                 <tr>
-                                    <td><?php echo $one['fname']." ".$one['lname'];?></td>
-                                    <td><?php echo $one['adm'];?></td>
-                                    <td><?php echo $one['cname'];?></td>
-                                    <td><?php if($one['last_seen']) echo date('d/m/Y H:i',strtotime($one['last_seen']));?></td>
-                                    <td><span class="badge badge-<?php echo $class;?>"><?php echo $status;?></span></td>
-                                    <td>
-                                        <button class="btn btn-info view-student" data-id = "<?php echo $one['id'];?>"><i class="fa fa-eye"></i></button>
-                                        <button class="btn btn-primary edit-student" data-id = "<?php echo $one['id'];?>"><i class="fa fa-edit"></i></button>
-                                        <button class="btn btn-danger delete-subject" data-id = "<?php echo $one['id'];?>"><i class="fa fa-trash"></i></button>
-                                        <?php if($one['status'] == 1){?>
-                                            <button class="btn btn-warning ban-student" data-id = "<?php echo $one['id'];?>"><i class="fas fa-ban"></i></button>
-                                        <?php }else{ ?>
-                                            <button class="btn btn-success allow-student" data-id = "<?php echo $one['id'];?>"><i class="fas fa-chevron-circle-right"></i></button>
-                                        <?php  }?>
-
-                                    </td>
+                                    <td><?= $i; ?></td>
+                                    <td><?php echo $one['name'];?></td>
+                                    <td><?php echo $one['phone'];?></td>
+                                    <td><?php echo number_format($one['tot'],"2",".",",");?></td>
                                 </tr>
 
                             <?php   }

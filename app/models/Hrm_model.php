@@ -86,6 +86,8 @@ class Hrm_model extends CI_Model
     }
 
     public function addstaff($data){
+        $sql1 = "";
+        $sql2 = "";
         $staff = array("id" => $this->transcode(),"fname" => $data['fname'], "lname" => $data['lname'], "email" => $data['email'], "username" => $data['username'],
         "phone_no" => $data['phone_no'],"dob" => $data['dob'],"id_no" => $data['id_no'],"role_id" => $data['role_id'],"branch_id" => $data['branch_id']);
         $logins = array("password" => $this->aauth->hash($this->_pass));
@@ -95,19 +97,25 @@ class Hrm_model extends CI_Model
 
         $this->db->insert($this->_tableStaff, $staff);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            $sql1 = PHP_EOL . $this->db->last_query() . PHP_EOL;
+
         $logins['staff_id'] = $this->db->insert_id();
 
         $staff['id'] = $this->transcode();
         $this->db->insert($this->_tableLogin,$logins);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            $sql2 = PHP_EOL . $this->db->last_query() . PHP_EOL;
+
         if ($this->db->trans_status() == FALSE) {
             $this->db->trans_rollback();
             return 0;
         }
         else {
             $this->db->trans_complete();
+
+            file_put_contents($this->_exportFile, $sql1, FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, $sql2, FILE_APPEND | LOCK_EX);
+
             $this->db->trans_commit();
             return 1;
         }

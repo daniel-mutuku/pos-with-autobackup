@@ -28,7 +28,7 @@ class Pdf
 
     function load($param = NULL)
     {
-        require_once APPPATH . 'third_party/vendor/autoload.php';
+        require_once APPPATH . 'third_party/vendor/vendor/autoload.php';
         $mpdf = new \Mpdf\Mpdf(['tempDir' => $this->temppath,'mode' => 'utf-8', 'format' => 'A4', 'margin_left' => 20, 'margin_right' => 20, 'margin_top' => 10, 'margin_bottom' => 4]);
         //$mpdf->SetDirectionality('RTL');
         $mpdf->autoScriptToLang = true;
@@ -40,7 +40,7 @@ class Pdf
     {
 
 
-        require_once APPPATH . 'third_party/vendor/autoload.php';
+        require_once APPPATH . 'third_party/vendor/vendor/autoload.php';
 
         $mpdf = new \Mpdf\Mpdf(['tempDir' => $this->temppath]);
 
@@ -57,7 +57,7 @@ class Pdf
     {
 
 
-        require_once APPPATH . 'third_party/vendor/autoload.php';
+        require_once APPPATH . 'third_party/vendor/vendor/autoload.php';
 
         $mpdf = new \Mpdf\Mpdf(['tempDir' => $this->temppath,'default_font' => 'bangla','mode' => 'utf-8', 'format' => 'A4', 'margin_left' => 5, 'margin_right' => 5, 'margin_top' =>$param['margin_top'], 'margin_bottom' => 12]);
 
@@ -75,7 +75,7 @@ class Pdf
     {
 
 
-        require_once APPPATH . 'third_party/vendor/autoload.php';
+        require_once APPPATH . 'third_party/vendor/vendor/autoload.php';
 
         $mpdf = new \Mpdf\Mpdf(['tempDir' => $this->temppath,'mode' => 'utf-8',  'margin_left' => 1, 'margin_right' => 1, 'margin_top' =>1, 'margin_bottom' => 1]);
 

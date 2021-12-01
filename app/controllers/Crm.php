@@ -111,11 +111,12 @@ class Crm extends BASE_Controller {
     }
     public function topclients()
     {
+        $this->data['clients'] = $this->crm_model->fetchtopclients();
         $this->data['dtable'] = "present";
-        $this->data['menu'] = "crm";
+        $this->data['menu'] = "reports";
         $this->data['menuitem'] = "topclients";
         $this->data['pg_title'] = "Top Clients";
-        $this->data['page_content'] = 'crm/clients';
+        $this->data['page_content'] = 'crm/topclients';
         $this->load->view('layout/template', $this->data);
     }
     public function clientpmts()
