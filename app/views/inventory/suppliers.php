@@ -118,11 +118,11 @@
                         </div>
                         <div class="form-group col-sm-6">
                             <label>ID no.<small class="required">*</small></label>
-                            <input type="number" name="id_no" class="form-control" placeholder="ID no..">
+                            <input type="tel" minlength="8" maxlength="8"  name="id_no" class="form-control" placeholder="ID no..">
                         </div>
                         <div class="form-group col-sm-6">
                             <label>Phone no<small class="required">*</small></label>
-                            <input type="tel" name="phone_no" class="form-control" placeholder="Phone no..">
+                            <input type="tel" name="phone_no" maxlength="12" minlength="10" class="form-control" placeholder="Phone no..">
                         </div>
                         <div class="form-group col-sm-6">
                             <label>Location<small class="required">*</small></label>
@@ -166,7 +166,7 @@
                         <div class="form-group col-sm-6">
                             <label>Amount.<small class="required">*</small></label>
                             <input type="hidden" id="supplier_id" name="supplier_id">
-                            <input type="number" min="0" name="amount" class="form-control" placeholder="Amount..">
+                            <input type="number" min="1" name="amount" class="form-control" placeholder="Amount..">
                         </div>
 
                         <div class="form-group col-sm-6">
@@ -214,11 +214,11 @@
                         </div>
                         <div class="form-group col-sm-6">
                             <label>ID no.<small class="required">*</small></label>
-                            <input type="number" id="id_no" name="id_no" class="form-control" placeholder="ID no..">
+                            <input type="number" minlength="8" maxlength="8" id="id_no" name="id_no" class="form-control" placeholder="ID no..">
                         </div>
                         <div class="form-group col-sm-6">
                             <label>Phone no<small class="required">*</small></label>
-                            <input type="tel" id="phone_no" name="phone_no" class="form-control" placeholder="Phone no..">
+                            <input type="tel" id="phone_no" maxlength="12" minlength="10" name="phone_no" class="form-control" placeholder="Phone no..">
                         </div>
                         <div class="form-group col-sm-6">
                             <label>Location<small class="required">*</small></label>

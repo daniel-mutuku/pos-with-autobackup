@@ -54,3 +54,4 @@ ERROR - 2021-12-01 16:28:50 --> Severity: Warning --> Invalid argument supplied 
 ERROR - 2021-12-01 16:32:06 --> Severity: error --> Exception: syntax error, unexpected ';' C:\xampp\htdocs\project\app\views\crm\topclients.php 53
 ERROR - 2021-12-01 17:16:24 --> Severity: error --> Exception: Call to undefined method Sales_model::fetchcashsales() C:\xampp\htdocs\project\app\controllers\Sales.php 84
 ERROR - 2021-12-01 17:17:18 --> Severity: error --> Exception: Call to undefined method Sales_model::fetchcashsales() C:\xampp\htdocs\project\app\controllers\Sales.php 84
+ERROR - 2021-12-01 19:30:31 --> Severity: error --> Exception: Call to a member function dailyincome() on null C:\xampp\htdocs\project\app\controllers\Dashboard.php 18

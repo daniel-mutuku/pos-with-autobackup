@@ -277,7 +277,7 @@ $config['sess_driver'] = 'files';
 | 'cookie_secure' =  Cookies will only be set if a secure HTTPS connection exists.
 |
 */
-$config['cookie_prefix'] = "Proj_";
+$config['cookie_prefix'] = "";
 $config['cookie_domain'] = "";
 $config['cookie_path'] = "/";
 $config['cookie_secure'] = FALSE;

@@ -62,6 +62,8 @@
                                 $stock = $this->inventory_model->getstock($one['id']);
                                 if ($stock < 5){
                                     $color = "red";
+                                }else{
+                                    $color = "black";
                                 }
                                 ?>
                                 <tr>
@@ -116,15 +118,15 @@
                         </div>
                         <div class="form-group col-sm-6">
                             <label>Barcode<small class="required">*</small></label>
-                            <input type="number" name="barcode" class="form-control" placeholder="Name..">
+                            <input type="tel" maxlength="12" minlength="12" name="barcode" class="form-control" placeholder="Barcode..">
                         </div>
                         <div class="form-group col-sm-6">
                             <label>Buying Price<small class="required">*</small></label>
-                            <input type="number" min="0" name="buying_price" class="form-control" placeholder="BP..">
+                            <input type="number" min="1" name="buying_price" class="form-control" placeholder="BP..">
                         </div>
                         <div class="form-group col-sm-6">
                             <label>Selling Price<small class="required">*</small></label>
-                            <input type="number" min="0" name="selling_price" class="form-control" placeholder="SP..">
+                            <input type="number" min="1" name="selling_price" class="form-control" placeholder="SP..">
                         </div>
                         <div class="form-group col-sm-6">
                             <label>Warehouse<small class="required">*</small></label>
@@ -172,12 +174,12 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label>Stock Qty<small class="required">*</small></label>
-                            <input type="text" name="qty" class="form-control" placeholder="Qty..">
+                            <input type="number" min="1" name="qty" class="form-control" placeholder="Qty..">
                         </div>
                         <div class="form-group col-sm-6">
                             <label>Total Price<small class="required">*</small></label>
                             <input type="hidden" name="product_id" id="product_id">
-                            <input type="text" name="price" class="form-control" placeholder="Total price..">
+                            <input type="number" min="1" name="price" class="form-control" placeholder="Total price..">
                         </div>
 
                         <div class="form-group col-sm-6">
@@ -225,15 +227,15 @@
                         </div>
                         <div class="form-group col-sm-6">
                             <label>Barcode<small class="required">*</small></label>
-                            <input type="number" id="barcode" name="barcode" class="form-control" placeholder="Name..">
+                            <input type="tel" maxlength="12" minlength="12" id="barcode" name="barcode" class="form-control" placeholder="Barcode..">
                         </div>
                         <div class="form-group col-sm-6">
                             <label>Buying Price<small class="required">*</small></label>
-                            <input type="number" id="buying_price" min="0" name="buying_price" class="form-control" placeholder="BP..">
+                            <input type="number" id="buying_price" min="1" name="buying_price" class="form-control" placeholder="BP..">
                         </div>
                         <div class="form-group col-sm-6">
                             <label>Selling Price<small class="required">*</small></label>
-                            <input type="number" id="selling_price" min="0" name="selling_price" class="form-control" placeholder="SP..">
+                            <input type="number" id="selling_price" min="1" name="selling_price" class="form-control" placeholder="SP..">
                         </div>
                         <div class="form-group col-sm-6">
                             <label>Warehouse<small class="required">*</small></label>
@@ -302,7 +304,7 @@
         $('#add-stock').modal('show');
     });
     $('.delete').click(function(){
-        var del = confirm("Are you sure you want to delete this Warehouse? NB: All the associated data i.e products, invoices etc will be deleted too!");
+        var del = confirm("Are you sure you want to delete this Product? NB: All the associated data will be deleted too!");
         if (del == true) {
             var id = $(this).attr("data-id");
             var url = "<?php echo base_url();?>" + "inventory/deleteproduct/" + id;

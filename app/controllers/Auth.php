@@ -14,6 +14,9 @@ class Auth extends CI_Controller {
 
 	public function index()
 	{
+        if($this->aauth->islogged()){
+            redirect('dashboard');
+        }
 		$this->data['pg_title'] = "Login";
         $this->data['page_content'] = 'auth/login';
         $this->load->view('layout/auth_template', $this->data);
@@ -21,37 +24,31 @@ class Auth extends CI_Controller {
     //finish the session of a logged in user
     function logout()
     {
-        // echo "here";die;
-        $this->session->unset_userdata('user_aob');
-        $this->session->sess_destroy();
+        delete_cookie("userdata");
         $this->session->set_flashdata('error-msg','You are logged out!');
-        redirect('auth/index');
+        redirect('auth');
     }
 
     function login_post()
     {
-        redirect('main/dashboard');
-//        if ($this->session->userdata('user_aob')) {
-//            redirect('main/dashboard');
-//        }
-//        $formInput = $this->input->post();
-//        $email = $formInput['email'];
-//        $password = $formInput['password'];
-//
-//        // define data to send
-//        $logindata = ['email' => $email, 'password' => $password];
-//
-//        $loginresponse = json_decode($this->auth_model->login($logindata));
-//        // var_dump($loginresponse);die;
-//        // echo $loginresponse->message;die;
-//        if ($loginresponse->status == '1') {
-//            $this->session->set_userdata('user_aob', $loginresponse->userdata);
-//            redirect('main/dashboard');
-//        } else {
-//
-//            $this->session->set_flashdata('error-msg', $loginresponse->message);
-//            redirect('auth/index');
-//        }
+        $formInput = $this->input->post();
+        $email = $formInput['email'];
+        $password = $formInput['password'];
+
+        // define data to send
+        $logindata = ['email' => $email, 'password' => $password];
+
+        $loginresponse = json_decode($this->auth_model->login($logindata));
+//         var_dump($loginresponse);die;
+        // echo $loginresponse->message;die;
+        if ($loginresponse->status == '1') {
+            $this->session->set_userdata('user_aob', $loginresponse->userdata);
+            redirect('dashboard');
+        } else {
+
+            $this->session->set_flashdata('error-msg', $loginresponse->message);
+            redirect('auth/index');
+        }
 
     }
 

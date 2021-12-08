@@ -33,7 +33,6 @@ class Crm_model extends CI_Model
 
     function branchid()
     {
-        return 2;
         return $this->aauth->user()['branch_id'];
     }
 
@@ -42,15 +41,17 @@ class Crm_model extends CI_Model
         $data['id'] = $this->transcode();
         $this->db->insert($this->_tableClients, $data);
         if ($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL . $this->db->last_query() . PHP_EOL, FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL . $this->db->last_query().";" . PHP_EOL, FILE_APPEND | LOCK_EX);
 
         return $this->db->insert_id();
     }
 
     public function fetchclients()
     {
-        $bid = $this->branchid();
-        $this->db->where('branch_id', $bid);
+        if ($this->aauth->user()['is_super'] == 0){
+            $bid = $this->branchid();
+            $this->db->where('branch_id', $bid);
+        }
         $query = $this->db->get($this->_tableClients);
 
         return $query->result_array();
@@ -69,7 +70,7 @@ class Crm_model extends CI_Model
         $this->db->where('id', $id);
         $this->db->delete($this->_tableClients);
         if ($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL . $this->db->last_query() . PHP_EOL, FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL . $this->db->last_query().";" . PHP_EOL, FILE_APPEND | LOCK_EX);
     }
 
     public function deletepmt($id)
@@ -77,12 +78,14 @@ class Crm_model extends CI_Model
         $this->db->where('id', $id);
         $this->db->delete($this->_tableInvoicePayments);
         if ($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL . $this->db->last_query() . PHP_EOL, FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL . $this->db->last_query().";" . PHP_EOL, FILE_APPEND | LOCK_EX);
     }
 
     public function fetchpmts()
     {
-        $this->db->where($this->_tableClients . ".branch_id", $this->branchid());
+        if ($this->aauth->user()['is_super'] == 0){
+            $this->db->where($this->_tableClients . ".branch_id", $this->branchid());
+        }
         $this->db->select($this->_tableInvoicePayments . ".*," . $this->_tableClients . ".name")->from($this->_tableInvoicePayments);
         $this->db->join($this->_tableClients, $this->_tableClients . ".id=" . $this->_tableInvoicePayments . ".client_id");
         $this->db->order_by($this->_tableInvoicePayments . ".created_at", "DESC");
@@ -96,7 +99,7 @@ class Crm_model extends CI_Model
         $this->db->where('id', $id);
         $this->db->update($this->_tableClients, $data);
         if ($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL . $this->db->last_query() . PHP_EOL, FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL . $this->db->last_query().";" . PHP_EOL, FILE_APPEND | LOCK_EX);
 
         return $this->db->affected_rows();
     }
@@ -106,7 +109,7 @@ class Crm_model extends CI_Model
         $data['id'] = $this->transcode();
         $this->db->insert($this->_tableInvoicePayments, $data);
         if ($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL . $this->db->last_query() . PHP_EOL, FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL . $this->db->last_query().";" . PHP_EOL, FILE_APPEND | LOCK_EX);
 
         return $this->db->insert_id();
     }
@@ -142,6 +145,5 @@ class Crm_model extends CI_Model
         $query = $this->db->get();
         return $query->result_array();
     }
-
 
 }

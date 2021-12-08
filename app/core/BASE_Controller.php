@@ -13,15 +13,24 @@
  ** */
 class BASE_Controller extends CI_Controller
 {
+    public $_backupStatus = FCPATH . "db".DIRECTORY_SEPARATOR."lockedStatus.txt";
     public function __construct()
     {
         parent::__construct();
-        // if(!$this->session->userdata('user_aob')){
-        // 	$this->session->set_flashdata('error-msg','Please login to continue!');
-        // 	redirect('auth');
-        // }
+        if(!$this->aauth->islogged()){
+         	$this->session->set_flashdata('error-msg','Please login to continue!');
+         	redirect('auth');
+         }
+        $this->_checkBackup();        
         
-        
+    }
+    public function _checkBackup()
+    {
+        $locked = file_get_contents($this->_backupStatus);
+        if($locked > 0){
+            redirect('backup/index');
+        }
+       
     }
 
     

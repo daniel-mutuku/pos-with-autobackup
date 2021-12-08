@@ -4,7 +4,10 @@
  * User: DANIEL
  * Date: 6 Nov 2021
  * Time: 09:54
- */?>
+ */
+$sdate = $_GET['sdate'];
+$edate = $_GET['edate'];
+?>
 <!-- Begin Page Content -->
 <div class="container-fluid">
     <div class="card shadow mb-4">
@@ -14,6 +17,26 @@
             </div>
         <?php } ?>
         <?php $this->load->view('includes/flashmessages'); ?>
+        <form action="" method="get">
+            <div class="row">
+                <div class="col-sm-5 form-group">
+                    <label>Start</label>
+                    <input class="form-control <?php if ($sdate) {
+                        echo 'bg-warning';
+                    } ?>" type="date" value="<?= $sdate; ?>" name="sdate">
+                </div>
+                <div class="col-sm-5 form-group">
+                    <label>End</label>
+                    <input class="form-control <?php if ($edate) {
+                        echo 'bg-warning';
+                    } ?>" type="date" style="" value="<?= $edate; ?>" name="edate">
+                </div>
+                <div class="col-sm-2">
+                    <button class="btn btn-outline-success" style="margin-top: 30px;">Filter</button>
+                </div>
+            </div>
+
+        </form>
     </div>
 
     <!-- Content Row -->
@@ -49,20 +72,73 @@
                         <tbody>
                         <?php if(!empty($pmts)){
                             $i = 0;
+                            $start = 0;
+                            $etart = 0;
                             foreach($pmts as $one) {
                                 $i++;
                                 ?>
-                                <tr>
-                                    <td><?= $i; ?></td>
-                                    <td><?php echo $one['name'];?></td>
-                                    <td><?php echo $one['mode'];?></td>
-                                    <td>Ksh. <?php echo number_format($one['amount'],"2",".",",");?></td>
-                                    <td><?= date('d/m/Y H:i',strtotime($one['created_at']));?></td>
-                                    <td>
-                                        <button class="btn btn-danger delete" data-id = "<?php echo $one['id'];?>"><i class="fa fa-trash"></i></button>
-                                    </td>
-                                </tr>
-
+                                <?php if (isset($sdate)) {
+                                }
+                                $start = strtotime($sdate);
+                                if (isset($edate))
+                                    $etart = strtotime($edate) + 86400;
+                                if ($start > 0 && $etart > 86400) {
+                                    if (strtotime($one['created_at']) >= $start && strtotime($one['created_at']) <= $etart) {
+                                        ?>
+                                        <tr>
+                                            <td><?= $i; ?></td>
+                                            <td><?php echo $one['name'];?></td>
+                                            <td><?php echo $one['mode'];?></td>
+                                            <td>Ksh. <?php echo number_format($one['amount'],"2",".",",");?></td>
+                                            <td><?= date('d/m/Y H:i',strtotime($one['created_at']));?></td>
+                                            <td>
+                                                <button class="btn btn-danger delete" data-id = "<?php echo $one['id'];?>"><i class="fa fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    <?php }
+                                } elseif ($start > 0 && $etart == 86400) {
+                                    if (strtotime($one['created_at']) >= $start) {
+                                        ?>
+                                        <tr>
+                                            <td><?= $i; ?></td>
+                                            <td><?php echo $one['name'];?></td>
+                                            <td><?php echo $one['mode'];?></td>
+                                            <td>Ksh. <?php echo number_format($one['amount'],"2",".",",");?></td>
+                                            <td><?= date('d/m/Y H:i',strtotime($one['created_at']));?></td>
+                                            <td>
+                                                <button class="btn btn-danger delete" data-id = "<?php echo $one['id'];?>"><i class="fa fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    <?php }
+                                } elseif ($etart > 86400 && $start == 0) {
+                                    if (strtotime($one['created_at']) <= $etart) {
+                                        ?>
+                                        <tr>
+                                            <td><?= $i; ?></td>
+                                            <td><?php echo $one['name'];?></td>
+                                            <td><?php echo $one['mode'];?></td>
+                                            <td>Ksh. <?php echo number_format($one['amount'],"2",".",",");?></td>
+                                            <td><?= date('d/m/Y H:i',strtotime($one['created_at']));?></td>
+                                            <td>
+                                                <button class="btn btn-danger delete" data-id = "<?php echo $one['id'];?>"><i class="fa fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    <?php }
+                                } else {
+                                    ?>
+                                    <tr>
+                                        <td><?= $i; ?></td>
+                                        <td><?php echo $one['name'];?></td>
+                                        <td><?php echo $one['mode'];?></td>
+                                        <td>Ksh. <?php echo number_format($one['amount'],"2",".",",");?></td>
+                                        <td><?= date('d/m/Y H:i',strtotime($one['created_at']));?></td>
+                                        <td>
+                                            <button class="btn btn-danger delete" data-id = "<?php echo $one['id'];?>"><i class="fa fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                }
+                                ?>
                             <?php   }
                         } ?>
                         </tbody>

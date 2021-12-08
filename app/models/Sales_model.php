@@ -17,6 +17,8 @@ class Sales_model extends CI_Model
     public $_tableInvoices = "invoices";
     public $_tableInvoicePayments = "invoice_payments";
     public $_tabbleProductadjustments = "product_adjustments";
+    public $_tableCategories = "product_categories";
+    public $_tableProducts = "products";
 
     public function __construct()
     {
@@ -34,7 +36,6 @@ class Sales_model extends CI_Model
 
     function branchid()
     {
-        return 2;
         return $this->aauth->user()['branch_id'];
     }
 
@@ -76,17 +77,17 @@ class Sales_model extends CI_Model
         $this->db->insert($this->_tableInvoices, $invoices); # Inserting data
         $invid = $this->db->insert_id();
         if ($invid > 0)
-            $sql1 = PHP_EOL . $this->db->last_query() . PHP_EOL;
+            $sql1 = PHP_EOL . $this->db->last_query().";" . PHP_EOL;
 
         $this->db->insert_batch($this->_tabbleProductadjustments, $prodadjustments);
         if ($this->db->affected_rows() > 0)
-            $sql2 = PHP_EOL . $this->db->last_query() . PHP_EOL;
+            $sql2 = PHP_EOL . $this->db->last_query().";" . PHP_EOL;
 
         if ($amtPaid > 0) {
             $this->db->insert($this->_tableInvoicePayments, $invoicepmts);
 
             if ($this->db->affected_rows() > 0)
-                $sql3 = PHP_EOL . $this->db->last_query() . PHP_EOL;
+                $sql3 = PHP_EOL . $this->db->last_query().";" . PHP_EOL;
         }
 
         if ($this->db->trans_status() == FALSE) {
@@ -124,11 +125,11 @@ class Sales_model extends CI_Model
         $this->db->delete($this->_tableInvoices); # Inserting data
         $invid = $this->db->affected_rows();
         if ($invid > 0)
-            $sql1 = PHP_EOL . $this->db->last_query() . PHP_EOL;
+            $sql1 = PHP_EOL . $this->db->last_query().";" . PHP_EOL;
 
         $this->db->insert_batch($this->_tabbleProductadjustments, $returns);
         if ($this->db->affected_rows() > 0)
-            $sql2 = PHP_EOL . $this->db->last_query() . PHP_EOL;
+            $sql2 = PHP_EOL . $this->db->last_query().";" . PHP_EOL;
 
         if ($this->db->trans_status() == FALSE) {
             # Something went wrong.
@@ -145,6 +146,10 @@ class Sales_model extends CI_Model
 
     public function fetchpossales()
     {
+        if ($this->aauth->user()['is_super'] == 0){
+            $bid = $this->branchid();
+            $this->db->where($this->_tableClients.'.branch_id', $bid);
+        }
         $this->db->select($this->_tableClients . ".name," . $this->_tableInvoices . ".*")->from($this->_tableInvoices);
         $this->db->join($this->_tableClients, $this->_tableClients . ".id=" . $this->_tableInvoices . ".client_id");
         $this->db->order_by($this->_tableInvoices . ".created_at", "DESC");
@@ -155,6 +160,10 @@ class Sales_model extends CI_Model
 
     public function fetchchashsales()
     {
+        if ($this->aauth->user()['is_super'] == 0){
+            $bid = $this->branchid();
+            $this->db->where($this->_tableClients.'.branch_id', $bid);
+        }
         $this->db->where($this->_tableInvoices . ".type", "Cash");
         $this->db->select($this->_tableClients . ".name," . $this->_tableInvoices . ".*")->from($this->_tableInvoices);
         $this->db->join($this->_tableClients, $this->_tableClients . ".id=" . $this->_tableInvoices . ".client_id");
@@ -166,6 +175,10 @@ class Sales_model extends CI_Model
 
     public function fetchcreditsales()
     {
+        if ($this->aauth->user()['is_super'] == 0){
+            $bid = $this->branchid();
+            $this->db->where($this->_tableClients.'.branch_id', $bid);
+        }
         $this->db->where($this->_tableInvoices . ".type", "Credit");
         $this->db->select($this->_tableClients . ".name," . $this->_tableInvoices . ".*")->from($this->_tableInvoices);
         $this->db->join($this->_tableClients, $this->_tableClients . ".id=" . $this->_tableInvoices . ".client_id");
@@ -184,6 +197,73 @@ class Sales_model extends CI_Model
         $query = $this->db->get();
 
         return $query->row_array();
+    }
+
+    public function monthlyincome()
+    {
+        $amt = 0;
+        $this->db->like('created_at', date('Y-m'));
+        $this->db->select_sum('invoice_amt')->from($this->_tableInvoices);
+        $query = $this->db->get();
+        if ($query->row_array()['invoice_amt'])
+            $amt = $query->row_array()['invoice_amt'];
+        return $amt;
+    }
+
+    public function dailyincome()
+    {
+        $amt = 0;
+        $this->db->like('created_at', date('Y-m-d'));
+        $this->db->select_sum('invoice_amt')->from($this->_tableInvoices);
+        $query = $this->db->get();
+        if ($query->row_array()['invoice_amt'])
+            $amt = $query->row_array()['invoice_amt'];
+        return $amt;
+    }
+
+    public function annualincome()
+    {
+        $amt = 0;
+        $this->db->like('created_at', date('Y'));
+        $this->db->select_sum('invoice_amt')->from($this->_tableInvoices);
+        $query = $this->db->get();
+        if ($query->row_array()['invoice_amt'])
+            $amt = $query->row_array()['invoice_amt'];
+        return $amt;
+    }
+
+    public function incomechart()
+    {
+        $labels = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        $m = 0;
+        $amounts = array();
+        foreach ($labels as $month) {
+            $m++;
+            $tot = 0;
+            $this->db->like('created_at', date('Y') . "-" . str_pad($m, 2, '0', STR_PAD_LEFT));
+            $this->db->select_sum('invoice_amt')->from($this->_tableInvoices);
+            $query = $this->db->get();
+            if ($query->row_array()['invoice_amt'])
+                $tot = $query->row_array()['invoice_amt'];
+            $amounts[] = abs((int)$tot);
+        }
+        return json_encode(array("data" => $amounts, "labels" => $labels));
+    }
+
+    public function packageschart()
+    {
+        $labels = array();
+        $data = array();
+        $query = $this->db->get($this->_tableCategories);
+        foreach ($query->result_array() as $one) {
+            $labels[] = $one['name'];
+
+            $this->db->where('cat_id', $one['id']);
+            $query = $this->db->get($this->_tableProducts);
+
+            $data[] = $query->num_rows();
+        }
+        return json_encode(array("data" => $data, "labels" => $labels));
     }
 
 }

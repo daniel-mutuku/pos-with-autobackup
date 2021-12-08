@@ -57,7 +57,7 @@
                                     </div>
 
                                     <div class="form-bordered"
-                                         style="min-height: 470px; max-height: 470px;overflow-y: auto;">
+                                         style="min-height: 350px; max-height: 350px;overflow-y: auto;">
                                         <table class="table table-striped table-bordered zero-configuration"
                                                cellspacing="0"
                                                width="100%" id="cartTable">
@@ -106,7 +106,7 @@
                                         PAYMENT
                                     </button>
                                 </div>
-                                <div class="col-sm-4" style="min-height: 470px; max-height: 470px;overflow-y: auto;">
+                                <div class="col-sm-4" style="min-height: 350px; max-height: 350px;overflow-y: auto;">
                                     <div class="row" style="margin: 10px;">
                                         <input type="text" id="searchbox" class="form-control"
                                                placeholder="Search name,barcode or sku">
@@ -118,7 +118,7 @@
                                         foreach ($products as $oneProd) {
                                             $stock = $oneProd['qty'];
                                             ?>
-                                            <div class="col-sm-6 single-prod" style="line-height: 15px;"
+                                            <div class="col-sm-6 single-prod" style="line-height: 15px;margin-top: 10px;"
                                                  data-string="<?php echo $oneProd['name'] . " " . $oneProd['sku'] . " " . $oneProd['barcode']; ?>">
                                                 <div class="card card-block" style="border: 1px solid grey;">
                                                     <div class="card-body">

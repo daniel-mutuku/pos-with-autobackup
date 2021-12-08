@@ -33,14 +33,13 @@ class Inventory_model extends CI_Model
     }
     function branchid()
     {
-        return 2;
         return $this->aauth->user()['branch_id'];
     }
     public function addwarehouse($data){
         $data['id'] = $this->transcode();
         $this->db->insert($this->_tableBranches,$data);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
 
         return $this->db->insert_id();
     }
@@ -60,7 +59,7 @@ class Inventory_model extends CI_Model
         $this->db->where('id',$id);
         $this->db->delete($this->_tableBranches);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
 
     }
     public function editwarehouse($data,$id)
@@ -69,7 +68,7 @@ class Inventory_model extends CI_Model
         $this->db->update($this->_tableBranches,$data);
 
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
 
         return $this->db->affected_rows();
     }
@@ -79,7 +78,7 @@ class Inventory_model extends CI_Model
         $this->db->insert($this->_tableCategories,$data);
 
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
 
         return $this->db->insert_id();
     }
@@ -100,7 +99,7 @@ class Inventory_model extends CI_Model
         $this->db->where('id',$id);
         $this->db->delete($this->_tableCategories);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
 
     }
     public function editcategory($data,$id)
@@ -108,7 +107,7 @@ class Inventory_model extends CI_Model
         $this->db->where('id',$id);
         $this->db->update($this->_tableCategories,$data);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
 
 
         return $this->db->affected_rows();
@@ -125,7 +124,7 @@ class Inventory_model extends CI_Model
         $data['id'] = $this->transcode();
         $this->db->insert($this->_tableProducts,$data);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
 
         return $this->db->insert_id();
     }
@@ -146,14 +145,14 @@ class Inventory_model extends CI_Model
         $this->db->where('id',$id);
         $this->db->delete($this->_tableProducts);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
     }
     public function editproduct($data,$id)
     {
         $this->db->where('id',$id);
         $this->db->update($this->_tableProducts,$data);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
 
         return $this->db->affected_rows();
     }
@@ -203,7 +202,7 @@ class Inventory_model extends CI_Model
         $data['id'] = $this->transcode();
         $this->db->insert($this->_tableSuppliers,$data);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
 
         return $this->db->insert_id();
     }
@@ -224,14 +223,14 @@ class Inventory_model extends CI_Model
         $this->db->where('id',$id);
         $this->db->delete($this->_tableSuppliers);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
     }
     public function editsupplier($data,$id)
     {
         $this->db->where('id',$id);
         $this->db->update($this->_tableSuppliers,$data);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
 
         return $this->db->affected_rows();
     }
@@ -249,14 +248,14 @@ class Inventory_model extends CI_Model
         $prodAds['id'] = $this->transcode();
         $this->db->insert($this->_tableProductAdjustments, $prodAds); # Inserting data
         if($this->db->affected_rows() > 0)
-            $sql1 = PHP_EOL . $this->db->last_query() . PHP_EOL;
+            $sql1 = PHP_EOL . $this->db->last_query().";" . PHP_EOL;
 
         $supply['adjustment_id'] = $this->db->insert_id();
 
         $supply['id'] = $this->transcode();
         $this->db->insert($this->_tableSuppSupplies,$supply);
         if($this->db->affected_rows() > 0)
-            $sql2 = PHP_EOL . $this->db->last_query() . PHP_EOL;
+            $sql2 = PHP_EOL . $this->db->last_query().";" . PHP_EOL;
 
         if ($this->db->trans_status() == FALSE) {
             # Something went wrong.
@@ -283,12 +282,12 @@ class Inventory_model extends CI_Model
         $this->db->where('adjustment_id',$id);
         $this->db->delete($this->_tableSuppSupplies);
         if($this->db->affected_rows() > 0)
-            $sql1 = PHP_EOL . $this->db->last_query() . PHP_EOL;
+            $sql1 = PHP_EOL . $this->db->last_query().";" . PHP_EOL;
 
         $this->db->where('id',$id);
         $this->db->delete($this->_tableProductAdjustments);
         if($this->db->affected_rows() > 0)
-            $sql2 = PHP_EOL . $this->db->last_query() . PHP_EOL;
+            $sql2 = PHP_EOL . $this->db->last_query().";" . PHP_EOL;
 
         if ($this->db->trans_status() == FALSE) {
             # Something went wrong.
@@ -311,7 +310,7 @@ class Inventory_model extends CI_Model
         $data['id'] = $this->transcode();
         $this->db->insert($this->_tableSuppPayments,$data);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
 
         return $this->db->insert_id();
     }
@@ -353,7 +352,7 @@ class Inventory_model extends CI_Model
         $this->db->where('id',$id);
         $this->db->delete($this->_tableProductAdjustments);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
 
         return $this->db->affected_rows();
     }
@@ -362,7 +361,7 @@ class Inventory_model extends CI_Model
         $this->db->where('id',$id);
         $this->db->delete($this->_tableSuppPayments);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
 
         return $this->db->affected_rows();
     }
@@ -372,7 +371,7 @@ class Inventory_model extends CI_Model
         $fdata['id'] = $this->transcode();
         $this->db->insert($this->_tableProductAdjustments,$fdata);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
 
         return $this->db->insert_id();
     }

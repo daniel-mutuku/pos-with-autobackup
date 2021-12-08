@@ -1,37 +1,18 @@
 
-UPDATE `login` SET `password` = '87146a1e2d55adc9694184fb5f5543ad'
-WHERE `staff_id` = '298413204'
+INSERT INTO `suppliers` (`name`, `email`, `id_no`, `phone_no`, `location`, `branch_id`, `id`) VALUES ('Daniel Mutuku', 'mike@gmail.com', '36474358', '0724654191', 'Nairobi, Kenya', '2', '205825298');
 
-UPDATE `login` SET `password` = '9e061dc6c341bfb89f01f5bcd11dc99f'
-WHERE `staff_id` = '298413204'
+INSERT INTO `product_adjustments` (`product_id`, `amount`, `effect`, `type`, `id`) VALUES ('262562760', '10', 'add', 'stock_purchase', '206212169');
 
-INSERT INTO `product_adjustments` (`product_id`, `amount`, `effect`, `type`, `id`) VALUES ('1', '10', 'add', 'stock_purchase', '238935108')
+INSERT INTO `supplier_supplies` (`supplier_id`, `total_price`, `adjustment_id`, `id`) VALUES ('205825298', '150000', 206212169, '206218327');
 
-INSERT INTO `supplier_supplies` (`supplier_id`, `total_price`, `adjustment_id`, `id`) VALUES ('1', '150000', 238935108, '238932716')
+INSERT INTO `clients` (`name`, `phone`, `branch_id`, `id`) VALUES ('Walkin Client', '0717576900', '2', '217563569');
 
-INSERT INTO `product_adjustments` (`product_id`, `amount`, `effect`, `type`, `id`) VALUES ('1', '10', 'add', 'stock_purchase', '238949857')
+INSERT INTO `invoices` (`id`, `branch_id`, `client_id`, `invoice_amt`, `discount`, `particulars`, `type`) VALUES ('218103415', 2, '217563569', 27400, '0600', '[{\"prodId\":\"262562760\",\"prodName\":\"HP\",\"prodQty\":1,\"prodCost\":\"28000.00\",\"prodTax\":0,\"prodTot\":\"28000.00\",\"avQty\":10}]', 'Cash');
 
-INSERT INTO `supplier_supplies` (`supplier_id`, `total_price`, `adjustment_id`, `id`) VALUES ('1', '150000', 238949857, '238948192')
+INSERT INTO `product_adjustments` (`amount`, `effect`, `id`, `product_id`, `type`) VALUES (1,'reduce','218102403','262562760','sale');
 
-INSERT INTO `clients` (`name`, `phone`, `branch_id`, `id`) VALUES ('Jane', '0712345667', '2', '269702718')
+INSERT INTO `invoice_payments` (`id`, `client_id`, `mode`, `amount`) VALUES ('218105904', '217563569', 'cash', '27400');
 
-INSERT INTO `invoices` (`id`, `branch_id`, `client_id`, `invoice_amt`, `discount`, `particulars`, `type`) VALUES ('211268109', 2, '214491532', 20000, '2000', '[{\"prodId\":\"1\",\"prodName\":\"Samsung M20\",\"prodQty\":1,\"prodCost\":\"22000.00\",\"prodTax\":0,\"prodTot\":\"22000.00\",\"avQty\":20}]', 'Cash')
+INSERT INTO `product_adjustments` (`product_id`, `amount`, `effect`, `type`, `id`) VALUES ('261775482', '10', 'reduce', 'stock_return', '285767295');
 
-INSERT INTO `product_adjustments` (`amount`, `effect`, `id`, `product_id`, `type`) VALUES (1,'add','211268734','1','sale')
-
-INSERT INTO `invoice_payments` (`id`, `client_id`, `mode`, `amount`) VALUES ('211266370', '214491532', 'cash', '20000')
-
-INSERT INTO `invoices` (`id`, `branch_id`, `client_id`, `invoice_amt`, `discount`, `particulars`, `type`) VALUES ('246019732', 2, '269702718', 21000, '1000', '[{\"prodId\":\"1\",\"prodName\":\"Samsung M20\",\"prodQty\":1,\"prodCost\":\"22000.00\",\"prodTax\":0,\"prodTot\":\"22000.00\",\"avQty\":21}]', 'Credit')
-
-INSERT INTO `product_adjustments` (`amount`, `effect`, `id`, `product_id`, `type`) VALUES (1,'add','246018305','1','sale')
-
-INSERT INTO `invoices` (`id`, `branch_id`, `client_id`, `invoice_amt`, `discount`, `particulars`, `type`) VALUES ('249233251', 2, '269702718', 20000, '2000', '[{\"prodId\":\"1\",\"prodName\":\"Samsung M20\",\"prodQty\":1,\"prodCost\":\"22000.00\",\"prodTax\":0,\"prodTot\":\"22000.00\",\"avQty\":18}]', 'Credit')
-
-INSERT INTO `product_adjustments` (`amount`, `effect`, `id`, `product_id`, `type`) VALUES (1,'reduce','249233256','1','sale')
-
-INSERT INTO `invoice_payments` (`id`, `client_id`, `mode`, `amount`) VALUES ('249231894', '269702718', 'cash', '20000')
-
-DELETE FROM `invoices`
-WHERE `id` = '246019732'
-
-INSERT INTO `product_adjustments` (`amount`, `effect`, `id`, `product_id`, `type`) VALUES (1,'add','274347145','1','sale_return')
+INSERT INTO `supplier_payments` (`supplier_id`, `amount`, `method`, `id`) VALUES ('205825298', '100000', 'cash', '200096978');

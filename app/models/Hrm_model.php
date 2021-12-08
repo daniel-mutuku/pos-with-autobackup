@@ -32,7 +32,6 @@ class Hrm_model extends CI_Model
     }
     function branchid()
     {
-        return 2;
         return $this->aauth->user()['branch_id'];
     }
 
@@ -40,7 +39,7 @@ class Hrm_model extends CI_Model
         $data['id'] = $this->transcode();
         $this->db->insert($this->_tableRoles,$data);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
 
         return $this->db->insert_id();
     }
@@ -63,14 +62,14 @@ class Hrm_model extends CI_Model
         $this->db->where('id',$id);
         $this->db->delete($this->_tableRoles);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
     }
     public function editrole($data,$id)
     {
         $this->db->where('id',$id);
         $this->db->update($this->_tableRoles,$data);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
 
         return $this->db->affected_rows();
     }
@@ -97,14 +96,14 @@ class Hrm_model extends CI_Model
 
         $this->db->insert($this->_tableStaff, $staff);
         if($this->db->affected_rows() > 0)
-            $sql1 = PHP_EOL . $this->db->last_query() . PHP_EOL;
+            $sql1 = PHP_EOL . $this->db->last_query().";" . PHP_EOL;
 
         $logins['staff_id'] = $this->db->insert_id();
 
         $staff['id'] = $this->transcode();
         $this->db->insert($this->_tableLogin,$logins);
         if($this->db->affected_rows() > 0)
-            $sql2 = PHP_EOL . $this->db->last_query() . PHP_EOL;
+            $sql2 = PHP_EOL . $this->db->last_query().";" . PHP_EOL;
 
         if ($this->db->trans_status() == FALSE) {
             $this->db->trans_rollback();
@@ -122,6 +121,10 @@ class Hrm_model extends CI_Model
     }
     public function fetchstaff()
     {
+        if ($this->aauth->user()['is_super'] == 0){
+            $bid = $this->branchid();
+            $this->db->where('branch_id', $bid);
+        }
         $query = $this->db->get($this->_tableStaff);
 
         return $query->result_array();
@@ -139,14 +142,14 @@ class Hrm_model extends CI_Model
         $this->db->where('id',$id);
         $this->db->delete($this->_tableStaff);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
     }
     public function editstaff($data,$id)
     {
         $this->db->where('id',$id);
         $this->db->update($this->_tableStaff,$data);
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
 
         return $this->db->affected_rows();
     }
@@ -155,7 +158,7 @@ class Hrm_model extends CI_Model
         $this->db->where('staff_id',$id);
         $this->db->update($this->_tableLogin,array("password" => $this->aauth->hash($data['pass'])));
         if($this->db->affected_rows() > 0)
-            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents($this->_exportFile, PHP_EOL.$this->db->last_query().";".PHP_EOL , FILE_APPEND | LOCK_EX);
 
         return $this->db->affected_rows();
     }

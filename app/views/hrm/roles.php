@@ -54,11 +54,11 @@
                                 ?>
                                 <tr>
                                     <td><?= $i; ?></td>
-                                    <td><?php echo $one['name'];?></td>
+                                    <td><?php echo $one['name'];?><?php if($one['is_super'] == 1){?>  <span class="badge badge-danger">system</span> <?php } ?></td>
                                     <td><?php echo $this->hrm_model->rolestaff($one['id']);?></td>
                                     <td>
                                         <button class="btn btn-primary edit" data-id = "<?php echo $one['id'];?>"><i class="fa fa-edit"></i></button>
-                                        <button class="btn btn-danger delete" data-id = "<?php echo $one['id'];?>"><i class="fa fa-trash"></i></button>
+                                        <?php if($one['is_super'] == 0){?><button class="btn btn-danger delete" data-id = "<?php echo $one['id'];?>"><i class="fa fa-trash"></i></button><?php } ?>
                                     </td>
                                 </tr>
 

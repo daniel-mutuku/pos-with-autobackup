@@ -25,9 +25,10 @@ class Aauth {
         // echo $pass_h;die;
 
         // select the user
-        $this->CI->db->select()->from('users');
+        $this->CI->db->select('login.password,staff.*,roles.name as rname,roles.is_super')->from('staff');
         $this->CI->db->where('email', $login['email']);
-        $this->CI->db->or_where('username', $login['email']);
+        $this->CI->db->join('login','login.staff_id=staff.id');
+        $this->CI->db->join('roles','roles.id=staff.role_id');
         $query = $this->CI->db->get();
         $res = $query->result_array();
 
@@ -59,34 +60,6 @@ class Aauth {
 
     }
 
-    function signup($data)
-    {
-        $data['password'] = $this->hash($data['password']);
-        $dueat = date('Y-m-d H:i:s', time()+(86400*9));
-        
-        $users = array('email' => $data['email'], 'username' => $data['username'], 'password' => $data['password'], 'category' => $data['category'],"due_at" => $dueat);
-        
-        $this->CI->db->insert('users',$users);
-
-        $userid = $this->CI->db->insert_id();
-        
-        
-        $result = array('email' => $data['email'], 'username' => $data['username'], 'id' => $userid, 'category' => $data['category']);
-
-        $umeta = array('user_id' => $userid, 'name' => $data['name'], 'phone' => $data['phone'], 'dob' => $data['dob']);
-
-        $this->CI->db->insert('users_meta',$umeta);
-
-        $cookie = array(
-                      'name'   => 'userdata',
-                      'value'  => json_encode($result),
-                      'expire' => 31536000
-                );
-        set_cookie($cookie);
-
-        return $userid;
-    }
-
     function format_phone($phone)
     {
         if(substr($phone,0,1) == "0"){
@@ -111,21 +84,7 @@ class Aauth {
     {
         $user = json_decode($this->CI->input->cookie('userdata', TRUE),TRUE);
 
-        // select the user meta
-        $this->CI->db->select()->from('users_meta');
-        $this->CI->db->where('user_id', $user['id']);
-        $query = $this->CI->db->get();
-        $res = $query->row_array();
-        
-        // select the user meta
-        $this->CI->db->select()->from('users');
-        $this->CI->db->where('id', $user['id']);
-        $query = $this->CI->db->get();
-        $user = $query->row_array();
-
-        $userdata =array('id' => $user['id'],'name' =>$res['name'], 'phone' =>$res['phone'], 'dob' =>$res['dob'], 'email' =>$user['email'], 'username' =>$user['username'], 'category' =>$user['category'],'subjects' => $res['subjects'],'profile_pic' => $res['profile_pic'],'about' => $res['about'],'verified' => $res['verified'],'parent_school' => $user['parent_school']);
-        // print_r($userdata);die;
-        return $userdata;
+        return $user;
     }
 
     

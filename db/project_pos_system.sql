@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 25, 2021 at 09:04 PM
+-- Generation Time: Dec 08, 2021 at 09:27 AM
 -- Server version: 10.1.37-MariaDB
 -- PHP Version: 7.2.14
 
@@ -43,7 +43,8 @@ CREATE TABLE `branches` (
 --
 
 INSERT INTO `branches` (`id`, `name`, `location`, `store_no`, `branch_phone`, `branch_email`, `created_at`, `updated_at`) VALUES
-(2, 'Newdawn Town', 'Nairobi, Kenya', 'DSD23CHD', '+254717576900', 'town@gmail.com', '2021-11-14 17:14:52', '2021-11-14 17:14:52');
+(2, 'Newdawn Town', 'Nairobi, Kenya', 'DSD23CHD', '+254717576900', 'town@gmail.com', '2021-11-14 17:14:52', '2021-11-14 17:14:52'),
+(284259610, 'Town branc', 'Nairobi, Kenya', 'wehsdajfh', '0724654191', 'townb@gmail.com', '2021-12-06 05:27:05', '2021-12-06 05:27:05');
 
 -- --------------------------------------------------------
 
@@ -55,15 +56,16 @@ CREATE TABLE `clients` (
   `id` int(11) NOT NULL,
   `name` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
   `phone` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
-  `branch_id` int(11) NOT NULL
+  `branch_id` int(11) NOT NULL,
+  `is_walkin` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `clients`
 --
 
-INSERT INTO `clients` (`id`, `name`, `phone`, `branch_id`) VALUES
-(214491532, 'Daniel Mutinda', '0717576900', 2);
+INSERT INTO `clients` (`id`, `name`, `phone`, `branch_id`, `is_walkin`) VALUES
+(217563569, 'Walkin Client', '0717576900', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -98,8 +100,15 @@ CREATE TABLE `invoices` (
   `tax` decimal(10,2) NOT NULL,
   `particulars` text COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `created_by` int(11) NOT NULL
+  `type` varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Cash'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `invoices`
+--
+
+INSERT INTO `invoices` (`id`, `branch_id`, `client_id`, `invoice_amt`, `discount`, `tax`, `particulars`, `created_at`, `type`) VALUES
+(218103415, 2, 217563569, '27400.00', '600.00', '0.00', '[{\"prodId\":\"262562760\",\"prodName\":\"HP\",\"prodQty\":1,\"prodCost\":\"28000.00\",\"prodTax\":0,\"prodTot\":\"28000.00\",\"avQty\":10}]', '2021-12-08 02:50:10', 'Cash');
 
 -- --------------------------------------------------------
 
@@ -115,6 +124,13 @@ CREATE TABLE `invoice_payments` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `invoice_payments`
+--
+
+INSERT INTO `invoice_payments` (`id`, `client_id`, `mode`, `amount`, `created_at`, `updated_at`) VALUES
+(218105904, 217563569, 'cash', '27400.00', '2021-12-08 02:50:10', '2021-12-08 02:50:10');
 
 -- --------------------------------------------------------
 
@@ -174,7 +190,10 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `sku`, `barcode`, `buying_price`, `selling_price`, `branch_id`, `cat_id`, `created_at`, `updated_at`) VALUES
-(1, 'Samsung M20', '243WD2345324E', '3324543231343', '15000.00', '22000.00', 2, 1, '2021-11-16 05:27:11', '2021-11-16 05:27:11');
+(261775482, 'Samsung M20', 'W34EKSASAE2', '2349248342342', '15000.00', '21000.00', 2, 254990182, '2021-12-06 13:09:37', '2021-12-06 13:09:37'),
+(262178041, 'Infinix ', 'jdsdjsssfdsjsdfv', '12345678754336', '10000.00', '15000.00', 2, 254990182, '2021-12-06 13:10:17', '2021-12-06 13:10:17'),
+(262562760, 'HP', 'DDFKSFMHFJJ34', '2947321489753', '21000.00', '28000.00', 2, 255458462, '2021-12-06 13:10:56', '2021-12-06 13:10:56'),
+(262886025, 'Lenovo', 'ssdk34esxaas', '348927343621292', '25000.00', '30000.00', 2, 255458462, '2021-12-06 13:11:28', '2021-12-06 13:11:28');
 
 -- --------------------------------------------------------
 
@@ -197,10 +216,9 @@ CREATE TABLE `product_adjustments` (
 --
 
 INSERT INTO `product_adjustments` (`id`, `product_id`, `amount`, `effect`, `type`, `created_at`, `updated_at`) VALUES
-(1, 1, 10, 'add', 'stock_purchase', '2021-11-16 11:04:00', '2021-11-21 15:19:27'),
-(2, 1, 10, 'add', 'stock_purchase', '2021-11-16 11:05:28', '2021-11-21 15:19:31'),
-(278, 1, 10, 'reduce', 'stock_return', '2021-11-21 17:47:58', '2021-11-21 17:47:58'),
-(270700169, 1, 10, 'reduce', 'stock_return', '2021-11-21 17:51:10', '2021-11-21 17:51:10');
+(206212169, 262562760, 10, 'add', 'stock_purchase', '2021-12-08 02:30:21', '2021-12-08 02:30:21'),
+(218102403, 262562760, 1, 'reduce', 'sale', '2021-12-08 02:50:10', '2021-12-08 02:50:10'),
+(285767295, 261775482, 10, 'reduce', 'stock_return', '2021-12-08 07:29:36', '2021-12-08 07:29:36');
 
 -- --------------------------------------------------------
 
@@ -220,8 +238,10 @@ CREATE TABLE `product_categories` (
 --
 
 INSERT INTO `product_categories` (`id`, `name`, `branch_id`, `created_at`) VALUES
-(1, 'Mobile phones', 2, '2021-11-14 17:31:44'),
-(2, 'Laptop', 2, '2021-11-16 05:09:20');
+(254608712, 'Health & Beauty', 2, '2021-12-06 13:07:52'),
+(254824768, 'Home & Office', 2, '2021-12-06 13:07:53'),
+(254990182, 'Phone & Tablets', 2, '2021-12-06 13:07:53'),
+(255458462, 'Computing', 2, '2021-12-06 13:07:53');
 
 -- --------------------------------------------------------
 
@@ -232,6 +252,7 @@ INSERT INTO `product_categories` (`id`, `name`, `branch_id`, `created_at`) VALUE
 CREATE TABLE `roles` (
   `id` int(11) NOT NULL,
   `name` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
+  `is_super` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -240,8 +261,8 @@ CREATE TABLE `roles` (
 -- Dumping data for table `roles`
 --
 
-INSERT INTO `roles` (`id`, `name`, `created_at`, `updated_at`) VALUES
-(246801598, 'Admin', '2021-11-25 18:24:40', '2021-11-25 18:24:40');
+INSERT INTO `roles` (`id`, `name`, `is_super`, `created_at`, `updated_at`) VALUES
+(246801598, 'Super Admin', 1, '2021-12-06 13:03:36', '2021-12-08 02:59:01');
 
 -- --------------------------------------------------------
 
@@ -323,8 +344,7 @@ CREATE TABLE `suppliers` (
 --
 
 INSERT INTO `suppliers` (`id`, `name`, `email`, `phone_no`, `id_no`, `location`, `branch_id`, `created_at`, `updated_at`) VALUES
-(1, 'Daniel', 'daniel@gmail.com', '07========6', 36474358, 'nairobi', 2, '2021-11-16 10:09:57', '2021-11-16 10:37:19'),
-(2, 'Dedan Kamau', 'dedan@gmail.com', '+254717576900', 36474358, 'Nairobi, Kenya', 2, '2021-11-16 10:36:06', '2021-11-16 10:36:06');
+(205825298, 'Daniel Mutuku', 'mike@gmail.com', '0724654191', 36474358, 'Nairobi, Kenya', 2, '2021-12-08 02:29:42', '2021-12-08 02:29:42');
 
 -- --------------------------------------------------------
 
@@ -339,6 +359,13 @@ CREATE TABLE `supplier_payments` (
   `method` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `supplier_payments`
+--
+
+INSERT INTO `supplier_payments` (`id`, `supplier_id`, `amount`, `method`, `created_at`) VALUES
+(200096978, 205825298, '100000.00', 'cash', '2021-12-08 07:53:29');
 
 -- --------------------------------------------------------
 
@@ -359,8 +386,7 @@ CREATE TABLE `supplier_supplies` (
 --
 
 INSERT INTO `supplier_supplies` (`id`, `adjustment_id`, `supplier_id`, `total_price`, `created_at`) VALUES
-(4, 1, 2, '150000.00', '2021-11-16 11:04:00'),
-(6, 2, 2, '150000.00', '2021-11-16 11:05:28');
+(206218327, 206212169, 205825298, '150000.00', '2021-12-08 02:30:21');
 
 --
 -- Indexes for dumped tables
@@ -500,13 +526,13 @@ ALTER TABLE `supplier_supplies`
 -- AUTO_INCREMENT for table `branches`
 --
 ALTER TABLE `branches`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=223533746;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=284259611;
 
 --
 -- AUTO_INCREMENT for table `clients`
 --
 ALTER TABLE `clients`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=240282195;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=217563570;
 
 --
 -- AUTO_INCREMENT for table `expenses`
@@ -518,13 +544,13 @@ ALTER TABLE `expenses`
 -- AUTO_INCREMENT for table `invoices`
 --
 ALTER TABLE `invoices`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=218103416;
 
 --
 -- AUTO_INCREMENT for table `invoice_payments`
 --
 ALTER TABLE `invoice_payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=231093729;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=218105905;
 
 --
 -- AUTO_INCREMENT for table `login`
@@ -542,25 +568,25 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=262886026;
 
 --
 -- AUTO_INCREMENT for table `product_adjustments`
 --
 ALTER TABLE `product_adjustments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=270700170;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=285767296;
 
 --
 -- AUTO_INCREMENT for table `product_categories`
 --
 ALTER TABLE `product_categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=255458463;
 
 --
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=282941535;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=246801599;
 
 --
 -- AUTO_INCREMENT for table `settings`
@@ -584,19 +610,19 @@ ALTER TABLE `stock_purchases`
 -- AUTO_INCREMENT for table `suppliers`
 --
 ALTER TABLE `suppliers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=205825299;
 
 --
 -- AUTO_INCREMENT for table `supplier_payments`
 --
 ALTER TABLE `supplier_payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=200096979;
 
 --
 -- AUTO_INCREMENT for table `supplier_supplies`
 --
 ALTER TABLE `supplier_supplies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=206218328;
 
 --
 -- Constraints for dumped tables
