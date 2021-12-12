@@ -12,6 +12,12 @@ class Auth extends CI_Controller {
         $this->load->model('auth_model');
     }
 
+    public function scheduler()
+    {
+        log_message('error',"done");
+        echo "done";
+    }
+
 	public function index()
 	{
         if($this->aauth->islogged()){

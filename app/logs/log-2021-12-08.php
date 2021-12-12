@@ -7,3 +7,5 @@ ERROR - 2021-12-08 06:12:48 --> 404 Page Not Found: Auth/login
 ERROR - 2021-12-08 06:13:26 --> Severity: error --> Exception: Call to undefined method Auth_model::login() C:\xampp\htdocs\project\app\controllers\Auth.php 43
 ERROR - 2021-12-08 06:15:00 --> 404 Page Not Found: Main/dashboard
 ERROR - 2021-12-08 10:14:33 -->  
+ERROR - 2021-12-08 16:41:26 --> 404 Page Not Found: Backup/images
+ERROR - 2021-12-08 17:06:30 --> 404 Page Not Found: Backup/images
